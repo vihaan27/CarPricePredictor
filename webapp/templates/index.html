@@ -11,7 +11,7 @@
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum, sequi
       magni. Vero in quos molestias tempora tempore voluptas itaque rem!
     </p>
-    <form action="/" method="post">
+    <form action="/predict" method="post">
       <label>Vehicle age:</label>
       <input type="number" name="vehicle_age" min="0" required /><br /><br />
 
@@ -57,5 +57,9 @@
 
       <button type="submit">Predict</button>
     </form>
+
+    {% if prediction_text %}
+    <h2>{{ prediction_text }}</h2>
+    {% endif %}
   </body>
 </html>
