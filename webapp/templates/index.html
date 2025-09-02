@@ -12,26 +12,38 @@
       magni. Vero in quos molestias tempora tempore voluptas itaque rem!
     </p>
     <form action="/predict" method="post">
-      <label>Vehicle age:</label>
+      <label>Vehicle age (in years):</label>
       <input type="number" name="vehicle_age" min="0" required /><br /><br />
 
       <label>Kilometers Driven:</label>
       <input type="number" name="km_driven" min="0" required /><br /><br />
 
       <label>Mileage (in km/litre):</label>
-      <input type="number" name="mileage" min="0" required /><br /><br />
+      <input
+        type="number"
+        name="mileage"
+        step="any"
+        min="0"
+        required
+      /><br /><br />
 
       <label>Engine Capacity (cubic centimeters):</label>
       <input type="number" name="engine" min="0" required /><br /><br />
 
       <label>Max Power (in BHP):</label>
-      <input type="number" name="max_power" min="0" required /><br /><br />
+      <input
+        type="number"
+        name="max_power"
+        step="any"
+        min="0"
+        required
+      /><br /><br />
 
       <label>Number of Seats:</label>
       <input type="number" name="seats" min="0" required /><br /><br />
 
       <label>Brand:</label>
-      <input type="text" name="brand" required /><br /><br />
+      <input type="number" name="brand" required /><br /><br />
 
       <label>Fuel Type:</label>
       <select name="fuel">
