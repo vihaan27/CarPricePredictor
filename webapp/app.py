@@ -4,6 +4,11 @@ import pandas as pd
 import joblib
 
 model = joblib.load("model.joblib")
+brand_freq_map = joblib.load("brand_freq_map.joblib")
+
+## Standardise brand names to uppercase
+brand_freq_map = {k.upper(): v for k, v in brand_freq_map.items()}
+brand_freq_map["OTHER"] = 0
 
 # My App
 app = Flask(__name__)
@@ -24,7 +29,8 @@ transmission_map = {"Manual": [1],
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    brands = sorted(brand_freq_map.keys())
+    return render_template("index.html", brands = brands)
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -39,7 +45,7 @@ def predict():
         engine = int(request.form["engine"])
         max_power = float(request.form["max_power"])
         seats = int(request.form["seats"])
-        brand = int(request.form["brand"]) ## for now, change to freq later
+        brand = request.form["brand"] 
         seller = request.form["seller"]
         fuel = request.form["fuel"]
         transmission = request.form["transmission"]
@@ -47,9 +53,10 @@ def predict():
         seller_encoded = seller_map[seller]
         fuel_encoded = fuel_map[fuel]
         transmission_encoded = transmission_map[transmission]
+        brand_freq = brand_freq_map.get(brand, 0)
 
         sample = [vehicle_age, km_driven, mileage, engine, max_power,
-                  seats, brand] + seller_encoded + fuel_encoded + transmission_encoded
+                  seats, brand_freq] + seller_encoded + fuel_encoded + transmission_encoded
         
         columns = ["vehicle_age","km_driven","mileage","engine","max_power",
                    "seats","brand_freq","Individual","Trustmark Dealer",
@@ -58,8 +65,8 @@ def predict():
 
         input_df = pd.DataFrame([sample], columns=columns)
         prediction = model.predict(input_df)
-        prediction_value = prediction.item()  # safe scalar
-        return render_template("index.html", prediction_text=f"Predicted Price: ₹{int(prediction_value):,}")
+        prediction_value = prediction.item()
+        return render_template("predict.html", prediction_text=f"Predicted Price: ₹{int(prediction_value):,}")
 
 if __name__ == "__main__":
     app.run(debug=True)
